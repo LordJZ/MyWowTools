@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "opcodefix", "opcodefix\opco
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "opcodemerge", "opcodemerge\opcodemerge.csproj", "{2CAFADC6-9DC1-4CF9-9C1E-B092EBF3F393}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Descriptors", "Descriptors\Descriptors.csproj", "{FEE0961A-841C-448F-BF91-4E207174B399}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,16 @@ Global
 		{2CAFADC6-9DC1-4CF9-9C1E-B092EBF3F393}.Release|Mixed Platforms.Build.0 = Release|x86
 		{2CAFADC6-9DC1-4CF9-9C1E-B092EBF3F393}.Release|x86.ActiveCfg = Release|x86
 		{2CAFADC6-9DC1-4CF9-9C1E-B092EBF3F393}.Release|x86.Build.0 = Release|x86
+		{FEE0961A-841C-448F-BF91-4E207174B399}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{FEE0961A-841C-448F-BF91-4E207174B399}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{FEE0961A-841C-448F-BF91-4E207174B399}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{FEE0961A-841C-448F-BF91-4E207174B399}.Debug|x86.ActiveCfg = Debug|x86
+		{FEE0961A-841C-448F-BF91-4E207174B399}.Debug|x86.Build.0 = Debug|x86
+		{FEE0961A-841C-448F-BF91-4E207174B399}.Release|Any CPU.ActiveCfg = Release|x86
+		{FEE0961A-841C-448F-BF91-4E207174B399}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{FEE0961A-841C-448F-BF91-4E207174B399}.Release|Mixed Platforms.Build.0 = Release|x86
+		{FEE0961A-841C-448F-BF91-4E207174B399}.Release|x86.ActiveCfg = Release|x86
+		{FEE0961A-841C-448F-BF91-4E207174B399}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
