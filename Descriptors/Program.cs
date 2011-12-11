@@ -87,11 +87,19 @@ namespace Descriptors
                             });
                         }
 
-                        var name = d.Name;
-                        if (name.EndsWith("_1"))
-                            name = name.Substring(0, name.Length - 2);
+                        int j = 2;
 
-                        for (int j = 2; j < size + 1; ++j)
+                        var name = d.Name;
+                        int underscoreIdx = name.LastIndexOf('_');
+                        int value;
+                        if (underscoreIdx != -1 && int.TryParse(name.Substring(underscoreIdx + 1), out value))
+                        {
+                            j = value + 1;
+                            name = name.Substring(0, underscoreIdx);
+                        }
+
+                        int lastOne = size + j - 1;
+                        for (; j < lastOne; ++j)
                         {
                             ds.Insert(++i, new Descriptors.Group.Descriptor()
                             {
