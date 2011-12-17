@@ -66,6 +66,9 @@ namespace Descriptors
                 for (int i = 0; i < ds.Count; i++)
                 {
                     var d = ds[i];
+                    // 4.3 hack, misspelled name
+                    if (d.Name == "PLAYER_QUEST_LOG_1_4")
+                        d.Name = "PLAYER_QUEST_LOG_1_5";
 
                     if (d.Size > 1)
                     {
