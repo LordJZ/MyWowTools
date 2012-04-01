@@ -202,6 +202,32 @@ namespace opcodemerge
             { "SMSG_UNKNOWN_1310", "SMSG_COMPRESSED_UNKNOWN_1310" },
             { "CMSG_RETURN_TO_GRAVEYARD", "CMSG_PORT_GRAVEYARD" },
             { "SMSG_CORPSE_NOT_IN_INSTANCE", "SMSG_AREA_TRIGGER_NO_CORPSE" },
+            { "CMSG_TIME_SYNC_RESP", "CMSG_TIME_SYNC_RESPONSE" },
+            { "CMSG_BATTLEFIELD_STATUS", "CMSG_QUERY_BATTLEFIELD_STATE" },
+            { "SMSG_GUILD_RANK", "SMSG_GUILD_RANKS" },
+            { "SMSG_TIME_SYNC_REQ", "SMSG_TIME_SYNC_REQUEST" },
+            { "CMSG_CHAR_ENUM", "CMSG_ENUM_CHARACTERS" },
+            { "SMSG_GUILD_BANK_LIST", "SMSG_GUILD_BANK_QUERY_RESULTS" },
+            { "SMSG_BATTLEFIELD_MANAGER_ENTRY_INVITE", "SMSG_BF_MGR_ENTRY_INVITE" },
+            { "SMSG_BATTLEFIELD_MANAGER_ENTERING", "SMSG_BF_MGR_ENTERING" },
+            { "SMSG_SET_PHASE_SHIFT", "SMSG_PHASE_SHIFT_CHANGE" },
+            { "SMSG_GUILD_TRADESKILL_UPDATE", "SMSG_GUILD_KNOWN_RECIPES" },
+            { "SMSG_UPDATE_CURRENCY_WEEK_LIMIT", "SMSG_SET_MAX_WEEKLY_QUANTITY" },
+            { "SMSG_BATTLEFIELD_MANAGER_EJECT_PENDING", "SMSG_BF_MGR_EJECT_PENDING" },
+            { "SMSG_BATTLEFIELD_MANAGER_STATE_CHANGED", "SMSG_BF_MGR_STATE_CHANGED" },
+            { "SMSG_BATTLEFIELD_MANAGER_EJECTED", "SMSG_BF_MGR_EJECTED" },
+            { "SMSG_LIST_INVENTORY", "SMSG_VENDOR_INVENTORY" },
+            { "SMSG_UPDATE_CURRENCY", "SMSG_SET_CURRENCY" },
+            { "SMSG_BATTLEFIELD_MANAGER_QUEUE_REQUEST_RESPONSE", "SMSG_BF_MGR_QUEUE_REQUEST_RESPONSE" },
+            { "CMSG_REQUEST_HOTFIX", "CMSG_DB_QUERY_BULK" },
+            { "CMSG_LOAD_SCREEN", "CMSG_LOADING_SCREEN_NOTIFY" },
+            { "SMSG_GUILD_REWARDS_LIST", "SMSG_GUILD_REWARD_LIST" },
+            { "SMSG_PLAY_SPELL_IMPACT", "SMSG_PLAY_SPELL_VISUAL_KIT" },
+            { "SMSG_BATTLEFIELD_MANAGER_QUEUE_INVITE", "SMSG_BF_MGR_QUEUE_INVITE" },
+            { "CMSG_REQUEST_RATED_BG_INFO", "CMSG_REQUEST_RATED_BG_STATS" },
+            { "CMSG_GROUP_INVITE", "CMSG_PARTY_INVITE" },
+            { "SMSG_CHAR_ENUM", "SMSG_ENUM_CHARACTERS_RESULT" },
+            { "CMSG_ARENA_TEAM_CREATE", "CMSG_CREATE_ARENA_TEAM" },
         };
 
         static void Main(string[] args)
@@ -214,6 +240,7 @@ namespace opcodemerge
             StreamWriter writer = null;
             bool insertHex = false;
             bool fixNameConflicts = false;
+            bool reverse = false;
 
             try
             {
@@ -242,6 +269,11 @@ namespace opcodemerge
                         case "-n":
                             fixNameConflicts = true;
                             break;
+                        case "-r":
+                            reverse = true;
+                            break;
+                        default:
+                            throw new Exception();
                     }
                 }
 
@@ -252,6 +284,19 @@ namespace opcodemerge
             {
                 usage();
                 return;
+            }
+
+            if (reverse)
+            {
+                var dict = new Dictionary<string, string>();
+                foreach (var pair in s_opcodeAnalogues)
+                {
+                    if (dict.ContainsKey(pair.Value))
+                        Console.WriteLine("New key skipped: " + pair.Value);
+                    else
+                        dict.Add(pair.Value, pair.Key);
+                }
+                s_opcodeAnalogues = dict;
             }
 
             var ourOpcodes = new List<Tuple<string, uint>>();
@@ -283,7 +328,7 @@ namespace opcodemerge
                             val = match.Groups[2].Value.ToNumeric<ulong>();
                         string opc = match.Groups[1].Value;
                         string opc2;
-                        if (s_opcodeAnalogues.TryGetValue(opc, out opc2))
+                        while (s_opcodeAnalogues.TryGetValue(opc, out opc2))
                             opc = opc2;
                         if (val < 0xFFFF || unk)
                         {
