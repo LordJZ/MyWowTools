@@ -1,3 +1,4 @@
+from idaapi import *
 
 # taken from somewhere
 def get_crefs_to( ea ):
