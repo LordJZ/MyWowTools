@@ -44,6 +44,12 @@ namespace DbcExtractor
                 .Replace("__", "_")
                 .Replace("__", "_");
 
+            if (input.Length > 0)
+            {
+                if (!Regex.IsMatch("" + input[0], @"[a-z_]", RegexOptions.IgnoreCase))
+                    input = "_" + input;
+            }
+
             return input;
         }
     }
