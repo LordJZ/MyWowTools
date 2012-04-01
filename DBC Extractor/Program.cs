@@ -69,14 +69,15 @@ namespace DbcExtractor
                 //DBC.Open<ChrRaces>                  ("ChrRaces.dbc"),
                 //DBC.Open<CreatureFamily>            ("CreatureFamily.dbc"),
                 //DBC.Open<CreatureType>              ("CreatureType.dbc"),
+                DBC.Open<CurrencyTypes>             ("CurrencyTypes.dbc"),
                 //DBC.Open<Faction>                   ("Faction.dbc"),
                 //DBC.Open<GlyphProperties>           ("GlyphProperties.dbc"),
                 //DBC.Open<ItemClass>                 ("ItemClass.dbc"),
                 //DBC.Open<ItemPetFood>               ("ItemPetFood.dbc"),
                 //DBC.Open<ItemSet>                   ("ItemSet.dbc"),
                 //DBC.Open<ItemSubClass>              ("ItemSubClass.dbc"),
-                DBC.Open<LFGDungeonGroup>           ("LFGDungeonGroup.dbc"),
-                DBC.Open<LFGDungeons>               ("LFGDungeons.dbc"),
+                //DBC.Open<LFGDungeonGroup>           ("LFGDungeonGroup.dbc"),
+                //DBC.Open<LFGDungeons>               ("LFGDungeons.dbc"),
                 //DBC.Open<Map>                       ("Map.dbc"),
                 //DBC.Open<QuestInfo>                 ("QuestInfo.dbc"),
                 //DBC.Open<QuestSort>                 ("QuestSort.dbc"),
@@ -98,6 +99,27 @@ namespace DbcExtractor
                 Console.WriteLine("DBC {0} Extracted.", Path.GetFileName(dbc.Filename));
             }
             Writer.Close();
+
+            if (!AsLocalized)
+            {
+                var w = new StreamWriter("DBC_" + filename + ".cs");
+                foreach (DBC dbc in DBCs)
+                {
+                    if (dbc.EntryType.GetCustomAttributes(typeof(AsEnumAttribute), true).Length != 0)
+                        w.Write(dbc.ToEnum());
+                    //Console.WriteLine("DBC {0} Extracted.", Path.GetFileName(dbc.Filename));
+                }
+                w.Close();
+            }
+
+            var w1 = new StreamWriter("DBC_" + filename + ".xml");
+            foreach (DBC dbc in DBCs)
+            {
+                if (dbc.EntryType.GetCustomAttributes(typeof(AsEnumAttribute), true).Length != 0)
+                    w1.Write(dbc.ToXML());
+                //Console.WriteLine("DBC {0} Extracted.", Path.GetFileName(dbc.Filename));
+            }
+            w1.Close();
         }
     }
 }

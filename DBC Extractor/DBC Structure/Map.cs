@@ -5,6 +5,7 @@ namespace DbcExtractor
 {
     [StructLayout(LayoutKind.Sequential)]
     [TableName("maps")]
+    [AsEnum("InternalName", "name", "Map")]
     struct Map
     {
         [PrimaryKey]
@@ -33,7 +34,7 @@ namespace DbcExtractor
         public uint MaxPlayers;                 // 18
         public int PhasingMap;                  // 19
 
-        public bool FixRow()
+        public bool FixRow(Locale lang)
         {
             string name = DBC.GetString(GetType(), this.InternalName);
             if (!String.IsNullOrEmpty(name))

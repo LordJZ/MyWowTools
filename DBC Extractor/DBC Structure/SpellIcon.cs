@@ -11,7 +11,7 @@ namespace DbcExtractor
         [DBCString(false)]
         public uint Icon;
 
-        public bool FixRow()
+        public bool FixRow(Locale lang)
         {
             Util.FixIcon(GetType(), Icon);
 

@@ -3,9 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Security;
 
 namespace DbcExtractor
 {
@@ -36,6 +38,14 @@ namespace DbcExtractor
         public static DBC Open<T>(string filename)
         {
             DBC dbc = new DBC(Path.Combine(Program.prefix, filename));
+            try
+            {
+                dbc.m_lang = (Locale)Enum.Parse(typeof(Locale), Program.prefix.Substring(Program.prefix.Length - 4, 4));
+            }
+            catch
+            {
+                dbc.m_lang = Locale.Default;
+            }
             dbc.Load<T>();
             Console.WriteLine("DBC {0} Loaded.", filename);
             return dbc;
@@ -63,7 +73,8 @@ namespace DbcExtractor
 
         private List<object> Entries = new List<object>();
         public string Filename { get; private set; }
-        private Type EntryType;
+        public Type EntryType { get; private set; }
+        private Locale m_lang;
 
         public DBC(string fn)
         {
@@ -126,7 +137,7 @@ namespace DbcExtractor
             {
                 for (int i = 0; i < Entries.Count; )
                 {
-                    if (!(bool)fixer.Invoke(Entries[i], null))
+                    if (!(bool)fixer.Invoke(Entries[i], new object[] { m_lang }))
                         Entries.RemoveAt(i);
                     else
                         ++i;
@@ -326,13 +337,9 @@ namespace DbcExtractor
                     LocalizedFieldRepr.Clear();
                     foreach (FieldInfo Info in LocalizedStrings)
                     {
-                        uint[] Ids = (uint[])Info.GetValue(Entry);
-                        for (int i = 0; i < Constants.TotalLocales; ++i)
-                        {
-                            if (Ids[i] != 0)
-                                LocalizedFieldRepr.Add(String.Format("{0}_loc{1} = '{2}'",
-                                    Info.Name, i, GetString(EntryType, Ids[i]).Escape()));
-                        }
+                        uint Ids = (uint)Info.GetValue(Entry);
+                        LocalizedFieldRepr.Add(String.Format("{0}_loc{1} = '{2}'",
+                            Info.Name, (int)m_lang, GetString(EntryType, Ids).Escape()));
                     }
 
                     if (LocalizedFieldRepr.Count != 0)
@@ -356,6 +363,96 @@ namespace DbcExtractor
             Builder.AppendLine();
 
             return Builder.ToString();
+        }
+
+        public string ToEnum()
+        {
+            var builder = new StringBuilder();
+
+            string translationMember = null;
+            string enumMember = null;
+            string prefix = null;
+            var tablenameArr = (AsEnumAttribute[])EntryType.GetCustomAttributes(typeof(AsEnumAttribute), true);
+            if (tablenameArr.Length != 0)
+            {
+                translationMember = tablenameArr[0].TranslationMember;
+                enumMember = tablenameArr[0].EnumMember;
+                prefix = tablenameArr[0].Prefix;
+            }
+
+            FieldInfo info;
+
+            if (String.IsNullOrEmpty(enumMember) || (info = EntryType.GetField(enumMember)) == null)
+            {
+                Console.WriteLine("Cannot find (or found invalid) [AsEnum] Attribute for struct {0}", EntryType.Name);
+                return String.Empty;
+            }
+
+            var pk = EntryType.GetFields().Single(fi => fi.GetCustomAttributes(typeof(PrimaryKeyAttribute), true).Length == 1);
+            var translationField = EntryType.GetField(translationMember);
+
+            var names = new List<string>(Entries.Count);
+            foreach (Object Entry in Entries)
+            {
+                var name = GetString(EntryType, (uint)info.GetValue(Entry)).Enumize();
+                var value = pk.GetValue(Entry);
+
+                if (names.Contains(name))
+                {
+                    string newName;
+                    int i = 1;
+                    do
+                    {
+                        newName = name + "_" + (++i);
+                    } while (names.Contains(newName));
+                    name = newName;
+                }
+                names.Add(name);
+
+                builder.AppendLine("        /// <summary>");
+                builder.AppendLine("        /// " + GetString(EntryType, (uint)translationField.GetValue(Entry)));
+                builder.AppendLine("        /// </summary>");
+                builder.AppendLine("        [LocalizedName(\"" + prefix + value.ToString() + "\")]");
+                builder.AppendLine("        " + name + " = " + value.ToString() + ",");
+            }
+
+            return builder.ToString();
+        }
+
+        public string ToXML()
+        {
+            var builder = new StringBuilder();
+
+            string translationMember = null;
+            string prefix = null;
+            var tablenameArr = (AsEnumAttribute[])EntryType.GetCustomAttributes(typeof(AsEnumAttribute), true);
+            if (tablenameArr.Length != 0)
+            {
+                translationMember = tablenameArr[0].TranslationMember;
+                prefix = tablenameArr[0].Prefix;
+            }
+
+            FieldInfo info;
+
+            if (String.IsNullOrEmpty(translationMember) || (info = EntryType.GetField(translationMember)) == null)
+            {
+                Console.WriteLine("Cannot find (or found invalid) [AsEnum] Attribute for struct {0}", EntryType.Name);
+                return String.Empty;
+            }
+
+            var pk = EntryType.GetFields().Single(fi => fi.GetCustomAttributes(typeof(PrimaryKeyAttribute), true).Length == 1);
+
+            foreach (Object Entry in Entries)
+            {
+                var name = GetString(EntryType, (uint)info.GetValue(Entry));
+                var value = pk.GetValue(Entry);
+
+                builder.AppendLine("    <data name=\"" + prefix + value.ToString() + "\" xml:space=\"preserve\">");
+                builder.AppendLine("      <value>" + SecurityElement.Escape(name) + "</value>");
+                builder.AppendLine("    </data>");
+            }
+
+            return builder.ToString();
         }
     }
 }

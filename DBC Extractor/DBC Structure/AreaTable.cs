@@ -25,10 +25,8 @@ namespace DbcExtractor
         /// Can be 0 and -1.
         /// </summary>
         public int level;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Constants.TotalLocales)]
         [DBCString(true)]
-        public uint[] name;
-        private uint nameflags;
+        public uint name;
         /// <summary>
         /// 2 - Alliance
         /// 4 - Horde
@@ -53,7 +51,7 @@ namespace DbcExtractor
         /// </summary>
         private float unk12;
 
-        public bool FixRow()
+        public bool FixRow(Locale lang)
         {
             if (parentZone != 0)
                 return false;
@@ -61,7 +59,7 @@ namespace DbcExtractor
             if (territory != 0)
                 return true;
 
-            string name_str = DBC.GetString(GetType(), name[0]);
+            string name_str = DBC.GetString(GetType(), name);
             if (name_str.IndexOf("reuse", StringComparison.InvariantCultureIgnoreCase) != -1
                 || name_str.IndexOf("unused", StringComparison.InvariantCultureIgnoreCase) != -1
                 || name_str.IndexOf("test", StringComparison.InvariantCultureIgnoreCase) != -1

@@ -12,7 +12,7 @@ namespace DbcExtractor
         public uint typeflags;
         public uint iconid;
 
-        public bool FixRow()
+        public bool FixRow(Locale lang)
         {
             if (spellid == 0)
                 return false;

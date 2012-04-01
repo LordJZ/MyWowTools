@@ -133,22 +133,14 @@ namespace DbcExtractor
         public uint SpellIconID;                                  // 133      m_spellIconID
         public uint ActiveIconID;                                 // 134      m_activeIconID
         public uint SpellPriority;                                // 135      m_spellPriority not used
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Constants.TotalLocales)]
         [DBCString(true)]
-        public uint[] SpellName;                                // 136-151  m_name_lang
-        private uint SpellNameFlag;                                // 152      not used
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Constants.TotalLocales)]
+        public uint SpellName;                                // 136-151  m_name_lang
         [DBCString(true)]
-        public uint[] Rank;                                     // 153-168  m_nameSubtext_lang
-        private uint RankFlags;                                    // 169      not used
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Constants.TotalLocales)]
+        public uint Rank;                                     // 153-168  m_nameSubtext_lang
         [DBCString(true)]
-        public uint[] Description;                              // 170-185  m_description_lang not used
-        private uint DescriptionFlags;                             // 186      not used
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Constants.TotalLocales)]
+        public uint Description;                              // 170-185  m_description_lang not used
         [DBCString(true)]
-        public uint[] ToolTip;                                  // 187-202  m_auraDescription_lang not used
-        private uint ToolTipFlags;                                 // 203      not used
+        public uint ToolTip;                                  // 187-202  m_auraDescription_lang not used
         public uint ManaCostPercentage;                           // 204      m_manaCostPct
         public uint StartRecoveryCategory;                        // 205      m_startRecoveryCategory
         public uint StartRecoveryTime;                            // 206      m_startRecoveryTime

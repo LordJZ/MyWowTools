@@ -12,18 +12,12 @@ namespace DbcExtractor
         public uint flags; // 0x1 hunter, rogue, deathknight, shaman; 0x8 deathknight
         public uint powerType;
         private uint unk0; // 1 for all, 126 for warlocks
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Constants.TotalLocales)]
         [DBCString(true)]
-        public uint[] nameMale;
-        private uint _nameflags1;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Constants.TotalLocales)]
+        public uint nameMale;
         [DBCString(true)]
-        public uint[] nameFemale;
-        private uint _nameflags2;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Constants.TotalLocales)]
+        public uint nameFemale;
         [DBCString(true)]
-        private uint[] nameNeutral;
-        private uint _nameflags3;
+        private uint nameNeutral;
         [DBCString(false)]
         public uint nameSystem;
         public uint spellFamily;
@@ -31,7 +25,7 @@ namespace DbcExtractor
         private uint cinematicSequence;
         public uint expansion;
 
-        public bool FixRow()
+        public bool FixRow(Locale lang)
         {
             string systemname = DBC.GetString(GetType(), this.nameSystem);
             if (!String.IsNullOrEmpty(systemname))

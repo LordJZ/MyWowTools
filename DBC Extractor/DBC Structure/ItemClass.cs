@@ -11,21 +11,16 @@ namespace DbcExtractor
         public uint Id;
         private uint unk0;
         private uint unk1; // 1 for weapon, all other 0
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Constants.TotalLocales)]
         [DBCString(true)]
-        public uint[] name;
-        private uint nameflags;
+        public uint name;
 
-        public bool FixRow()
+        public bool FixRow(Locale lang)
         {
-            foreach (Locale loc in Constants.SupportedLocales)
+            if (this.name != 0)
             {
-                if (this.name[(byte)loc] != 0)
-                {
-                    string name = DBC.GetString(GetType(), this.name[(byte)loc]);
-                    if (name.IndexOf("OBSOLETE", StringComparison.InvariantCultureIgnoreCase) != -1)
-                        return false;
-                }
+                string name = DBC.GetString(GetType(), this.name);
+                if (name.IndexOf("OBSOLETE", StringComparison.InvariantCultureIgnoreCase) != -1)
+                    return false;
             }
 
             return true;

@@ -11,8 +11,8 @@ namespace DbcExtractor
         public uint tabId;
         public uint row;
         public uint col;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 9)]
-        [Array(9)]
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 5)]
+        [Array(5)]
         public uint[] rank;
         public uint DependsOn;
         private uint DependsOn2;
@@ -22,9 +22,10 @@ namespace DbcExtractor
         private uint DependsOnRank3;
         private uint AddedToSpellBook;
         public uint rankCount;             // Some unknown value reused
-        public ulong petFamilyMask;
+        public ulong petFamilyMask; // unk
+        public ulong petFamilyMask1; // unk
 
-        public bool FixRow()
+        public bool FixRow(Locale lang)
         {
             rankCount = 0;
             for (int i = 0; i < rank.Length; ++i)

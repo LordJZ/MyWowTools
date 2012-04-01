@@ -24,24 +24,18 @@ namespace DbcExtractor
         public uint nameSystem;          // 11
         private uint cinematicSequence; // 12
         public uint side;               // 13 - 0 alliance, 1 horde, 2 other
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Constants.TotalLocales)]
         [DBCString(true)]
-        public uint[] nameMale;
-        private uint _nameflags1;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Constants.TotalLocales)]
+        public uint nameMale;
         [DBCString(true)]
-        public uint[] nameFemale;
-        private uint _nameflags2;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Constants.TotalLocales)]
+        public uint nameFemale;
         [DBCString(true)]
-        private uint[] nameNeutral;
-        private uint _nameflags3;
+        private uint nameNeutral;
         private uint unk10; // looks like colors
         private uint unk11; // but too high/low
         private uint unk12; // rgb values
         public uint expansion;
 
-        public bool FixRow()
+        public bool FixRow(Locale lang)
         {
             ++side;
             if (side == 3)

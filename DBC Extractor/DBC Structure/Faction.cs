@@ -19,25 +19,22 @@ namespace DbcExtractor
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 4)]
         private uint[] SpilloverDatas;
 
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Constants.TotalLocales)]
         [DBCString(true)]
-        public uint[] name;
-        private uint nameflags;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Constants.TotalLocales)]
+        public uint name;
         [DBCString(true)]
-        public uint[] description;
+        public uint description;
 
         /// <summary>
-        /// WORKAROUND: reused descflags to fix queries.
+        /// WORKAROUND: reused expansion to fix queries.
         /// </summary>
         public uint side;
 
-        public bool FixRow()
+        public bool FixRow(Locale lang)
         {
             if (reputationListID < 0)
                 return false;
 
-            string name_str = DBC.GetString(GetType(), name[0]);
+            string name_str = DBC.GetString(GetType(), name);
             if (name_str.IndexOf("reuse", StringComparison.InvariantCultureIgnoreCase) != -1
                 || name_str.IndexOf("unused", StringComparison.InvariantCultureIgnoreCase) != -1
                 || name_str.IndexOf("test", StringComparison.InvariantCultureIgnoreCase) != -1

@@ -13,9 +13,9 @@ namespace DbcExtractor
         public int unk1;
         [MarshalAs(UnmanagedType.ByValArray, SizeConst = 7)]
         private uint[] unk2_9;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Constants.TotalLocales)]
         [DBCString(true)]
-        public uint[] name;
-        private uint _nameflags;
+        public uint name;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 3)]
+        private uint[] unk3_3;
     }
 }

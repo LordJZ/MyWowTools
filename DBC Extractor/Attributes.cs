@@ -74,4 +74,19 @@ namespace DbcExtractor
             this.Count = Count;
         }
     }
+
+    [AttributeUsage(AttributeTargets.Struct, AllowMultiple = false)]
+    public class AsEnumAttribute : Attribute
+    {
+        public string EnumMember;
+        public string TranslationMember;
+        public string Prefix;
+
+        public AsEnumAttribute(string enumMember, string translationMember, string prefix)
+        {
+            this.EnumMember = enumMember;
+            this.TranslationMember = translationMember;
+            this.Prefix = prefix;
+        }
+    }
 }

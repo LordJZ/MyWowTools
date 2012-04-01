@@ -9,14 +9,12 @@ namespace DbcExtractor
     {
         [PrimaryKey]
         public uint Id;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Constants.TotalLocales)]
         [DBCString(true)]
-        public uint[] name;
-        private uint nameflags;
+        public uint name;
 
-        public bool FixRow()
+        public bool FixRow(Locale lang)
         {
-            string name_str = DBC.GetString(GetType(), name[0]);
+            string name_str = DBC.GetString(GetType(), name);
             if (name_str.IndexOf("reuse", StringComparison.InvariantCultureIgnoreCase) != -1
                 || name_str.IndexOf("unused", StringComparison.InvariantCultureIgnoreCase) != -1
                 || name_str.IndexOf("test", StringComparison.InvariantCultureIgnoreCase) != -1

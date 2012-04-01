@@ -8,9 +8,7 @@ namespace DbcExtractor
     {
         [PrimaryKey]
         public uint Id;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Constants.TotalLocales)]
         [DBCString(true)]
-        public uint[] name;
-        private uint nameflags;
+        public uint name;
     }
 }

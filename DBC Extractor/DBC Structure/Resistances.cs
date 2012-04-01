@@ -16,9 +16,7 @@ namespace DbcExtractor
         /// 0 for Physical, unknown 1424-1428 values for others.
         /// </summary>
         private uint unk1;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Constants.TotalLocales)]
         [DBCString(true)]
-        public uint[] name;
-        private uint nameflags;
+        public uint name;
     }
 }

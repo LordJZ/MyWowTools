@@ -10,11 +10,8 @@ namespace DbcExtractor
         public uint Id;
         [Index("category")]
         public int parent;
-        [MarshalAs(UnmanagedType.ByValArray, SizeConst = Constants.TotalLocales)]
         [DBCString(true)]
-        public uint[] name;
-
-        private uint _nameflags;
+        public uint name;
 
         public uint order;
     }
